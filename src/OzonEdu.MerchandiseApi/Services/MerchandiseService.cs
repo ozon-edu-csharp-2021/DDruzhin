@@ -9,7 +9,7 @@ namespace OzonEdu.MerchandiseApi.Services
 {
     public class MerchandiseService :IMerchandiseService
     {
-        private readonly List<MerchItem> MerchItems = new List<MerchItem>
+        private readonly List<MerchItem> _merchItems = new()
         {
             new MerchItem(1,MerchType.VeteranPack,5,false),
             new MerchItem(2,MerchType.WelcomePack,3,true),
@@ -21,15 +21,15 @@ namespace OzonEdu.MerchandiseApi.Services
         };
         public Task<MerchItem> RequestMerch(long workerId, MerchType merchType, CancellationToken token)
         {
-            var itemId = MerchItems.Max(x => x.MerchItemId) + 1;
-            var item = new MerchItem(itemId, MerchType.VeteranPack, 4, false);
-            MerchItems.Add(item);
+            var itemId = _merchItems.Max(x => x.MerchItemId) + 1;
+            var item = new MerchItem(itemId, merchType, workerId, false);
+            _merchItems.Add(item);
             return Task.FromResult(item);
         }
 
         public Task<List<MerchItem>> RequestMerchInfo(long workerId, CancellationToken token)
         {
-            var list = MerchItems.Where(item => item.WorkerId == workerId).ToList();
+            var list = _merchItems.Where(item => item.WorkerId == workerId).ToList();
             return Task.FromResult(list);
         }
     }

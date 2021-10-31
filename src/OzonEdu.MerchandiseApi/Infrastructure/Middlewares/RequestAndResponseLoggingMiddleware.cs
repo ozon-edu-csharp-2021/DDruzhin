@@ -19,12 +19,12 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            await LogRequest(context);
+            LogRequest(context);
             await _next(context);
-            await LogResponse(context);
+            LogResponse(context);
         }
 
-        private async Task LogResponse(HttpContext context)
+        private void LogResponse(HttpContext context)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Middlewares
             }
         }
 
-        private async Task LogRequest(HttpContext context)
+        private void LogRequest(HttpContext context)
         {
             try
             {
