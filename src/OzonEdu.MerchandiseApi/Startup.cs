@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseApi.GrpcServices;
-using OzonEdu.MerchandiseApi.Services;
-using OzonEdu.MerchandiseApi.Services.Interfaces;
+using OzonEdu.MerchandiseApi.Infrastructure.Extensions;
+using OzonEdu.MerchandiseApi.Infrastructure.Interceptors;
 
 namespace OzonEdu.MerchandiseApi
 {
@@ -19,7 +19,9 @@ namespace OzonEdu.MerchandiseApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IMerchandiseService, MerchandiseService>();
+            services.AddInfrastructureServices();
+            services.AddInfrastructureRepositories();
+            services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
