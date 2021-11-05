@@ -37,7 +37,7 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
         // итемы, еще в будущем возможно расширение функционала
         // по типу предложения выбора состава пака сотруднику
         // например рюкзак или толстовка
-        public List<MerchItem> MerchItems { get; }
+        public IEnumerable<MerchItem> MerchItems { get; }
 
         // дата создания заявки на выдачу, если ведении очередности по
         // id в бд не подходит, то можно использовать это поле для
@@ -64,7 +64,7 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
                 }
             }
             // если все итемы для выдачи есть и зарезервированы
-            if (MerchItems.Count(item => item.Availability is true) == MerchItems.Count)
+            if (MerchItems.Count(item => item.Availability is true) == MerchItems.Count())
             {
                 DeliveryDate = DateTime.Now;
                 AddMerchPackReadyDeliveryDomainEvent();

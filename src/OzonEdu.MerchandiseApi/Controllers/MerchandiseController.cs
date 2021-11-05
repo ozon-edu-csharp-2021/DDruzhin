@@ -23,7 +23,7 @@ namespace OzonEdu.MerchandiseApi.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<MerchPackResponse>> RequestMerch(string workerEmail, int merchType, IEnumerable<long> items,
+        public async Task<ActionResult<MerchPackResponse>> RequestMerchPack(string workerEmail, int merchType, IEnumerable<long> items,
             CancellationToken token)
         {
             var merchPackRequestCommand = new MerchPackRequestCommand
@@ -32,35 +32,35 @@ namespace OzonEdu.MerchandiseApi.Controllers
                 MerchItems = items,
                 MerchType = merchType
             };
-            var merchItem = await _mediator.Send(merchPackRequestCommand,token);
-            if (merchItem is null)
+            var merchPack = await _mediator.Send(merchPackRequestCommand,token);
+            if (merchPack is null)
             {
                 return NotFound();
             }
 
-            return Ok(merchItem);
+            return Ok(merchPack);
         }
 
 
         [HttpGet("{workerEmail}")]
-        public async Task<ActionResult<List<MerchPackResponse>>> RequestMerchInfo(string workerEmail, CancellationToken token)
+        public async Task<ActionResult<List<MerchPackResponse>>> RequestMerchPacksInfo(string workerEmail, CancellationToken token)
         {
             var merchPacksInfoRequestCommand = new MerchPacksInfoRequestCommand
             {
                 Worker = workerEmail
             };
-            var merchItems = await _mediator.Send(merchPacksInfoRequestCommand, token);
+            var merchPacks = await _mediator.Send(merchPacksInfoRequestCommand, token);
 
-            if (merchItems is null)
+            if (merchPacks is null)
             {
                 return NotFound();
             }
-            if (!merchItems.Any())
+            if (!merchPacks.Any())
             {
                 return NoContent();
             }
 
-            return Ok(merchItems);
+            return Ok(merchPacks);
         }
     }
 }

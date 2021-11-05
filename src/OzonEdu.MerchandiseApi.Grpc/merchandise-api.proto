@@ -3,34 +3,45 @@ option csharp_namespace = "OzonEdu.MerchandiseApi.Grpc";
 package MerchandiseApi;
 
 service MerchandiseApiGrpc {
-  rpc RequestMerch(RequestMerchRequest) returns (RequestMerchResponse);
-  rpc RequestMerchInfo(RequestMerchInfoRequest) returns (RequestMerchInfoResponse);
+  rpc RequestMerchPack(RequestMerchPackRequest) returns (RequestMerchPackResponse);
+  rpc RequestMerchPacksInfo(RequestMerchPacksInfoRequest) returns (RequestMerchPacksInfoResponse);
 }
-message RequestMerchRequest{
-  int64 worker_id = 1;
-  MerchType merch_type = 2;
+message RequestMerchPackRequest{
+  MerchType merch_type = 1;
+  string worker_email = 2;
+  repeated int64 items = 3;
 }
-message RequestMerchResponse{
-  MerchUnit merch_unit = 1;
+message RequestMerchPackResponse{
+  MerchPackUnit merch_unit = 1;
 }
-message RequestMerchInfoRequest{
-  int64 worker_id = 1;
+message RequestMerchPacksInfoRequest{
+  string worker_email = 1;
 }
-message RequestMerchInfoResponse{
-  repeated MerchUnit merch = 1;
+message RequestMerchPacksInfoResponse{
+  repeated MerchPackUnit merch = 1;
 }
-message MerchUnit{
-  int64 merch_item_id = 1;
-  MerchType merch_type = 2;
-  int64 worker_id = 3;
-  bool issued = 4;
+message MerchPackUnit{
+  int64 merch_pack_id = 1;
+  string worker_email = 2;
+  Status status = 3; 
+  MerchType merch_type = 4;
+  repeated int64 merch_items = 5;
+  int64 request_date = 6;
+  int64 delivery_date = 7;
 }
 enum MerchType
 {
-  NONE = 0;
+  NONE_TYPE = 0;
   WELCOME_PACK = 10;
   CONFERENCE_LISTENER_PACK = 20;
   CONFERENCE_SPEAKER_PACK = 30;
   PROBATION_PERIOD_ENDING_PACK = 40;
   VETERAN_PACK = 50;
+}
+
+enum Status
+{
+  NONE_STATUS = 0;
+  ISSUED = 1;
+  WAIT_ITEMS = 2;
 }
