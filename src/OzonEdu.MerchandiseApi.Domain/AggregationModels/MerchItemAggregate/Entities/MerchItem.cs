@@ -1,8 +1,8 @@
-﻿using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Exceptions;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.ValueObjects;
+﻿using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Exceptions;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.Models;
 
-namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities
+namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities
 {
     public class MerchItem : Entity
     {

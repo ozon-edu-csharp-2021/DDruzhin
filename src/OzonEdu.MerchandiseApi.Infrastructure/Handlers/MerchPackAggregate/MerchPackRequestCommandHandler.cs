@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate;
 using OzonEdu.MerchandiseApi.Domain.Models;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
@@ -19,14 +21,16 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
     {
         private readonly IMerchPackRepository _merchPackRepository;
         private readonly IWorkerRepository _workerRepository;
+        private readonly IMerchItemRepository _merchItemRepository;
         private readonly IMediator _mediator;
 
         public MerchPackRequestCommandHandler(IMerchPackRepository merchPackRepository,
-            IWorkerRepository workerRepository, IMediator mediator)
+            IWorkerRepository workerRepository, IMediator mediator, IMerchItemRepository merchItemRepository)
         {
             _merchPackRepository = merchPackRepository;
             _workerRepository = workerRepository;
             _mediator = mediator;
+            _merchItemRepository = merchItemRepository;
         }
 
         public async Task<MerchPack> Handle(MerchPackRequestCommand request, CancellationToken cancellationToken)
@@ -40,6 +44,9 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
                
                 throw new Exception($"Worker with email: {request.Worker} does not exist");
             }
+
+            await _merchItemRepository.CreateMerchItemsAsync(request.MerchItems, cancellationToken);
+            await _merchItemRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
             var newMerchPack = new MerchPack(
                 new MerchType(

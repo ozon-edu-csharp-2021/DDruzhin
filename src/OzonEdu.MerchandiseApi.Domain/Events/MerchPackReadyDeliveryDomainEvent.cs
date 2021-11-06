@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.ValueObjects;
 
 namespace OzonEdu.MerchandiseApi.Domain.Events
 {

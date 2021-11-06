@@ -1,10 +1,7 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Protobuf.Collections;
 using Grpc.Core;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseApi.Grpc;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPacksInfoRequest;

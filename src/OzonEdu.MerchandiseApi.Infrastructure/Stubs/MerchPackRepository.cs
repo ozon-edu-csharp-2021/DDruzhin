@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<MerchPack>> FindByWorkerAsync(string email, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<MerchPack>> FindByWorkerEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Exceptions;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Exceptions;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.ValueObjects;
 using Xunit;
 
 namespace OzonEdu.MerchandiseApi.Domain.Tests

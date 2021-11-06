@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OzonEdu.MerchandiseApi.Domain.Models;
 
-namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.ValueObjects
+namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects
 {
     public class Sku : ValueObject
     {
