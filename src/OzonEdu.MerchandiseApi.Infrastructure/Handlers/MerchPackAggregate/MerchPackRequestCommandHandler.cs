@@ -10,7 +10,6 @@ using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueOb
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate;
 using OzonEdu.MerchandiseApi.Domain.Models;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.WorkerRequest;
@@ -20,31 +19,18 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
     public class MerchPackRequestCommandHandler : IRequestHandler<MerchPackRequestCommand, MerchPack>
     {
         private readonly IMerchPackRepository _merchPackRepository;
-        private readonly IWorkerRepository _workerRepository;
         private readonly IMerchItemRepository _merchItemRepository;
         private readonly IMediator _mediator;
 
-        public MerchPackRequestCommandHandler(IMerchPackRepository merchPackRepository,
-            IWorkerRepository workerRepository, IMediator mediator, IMerchItemRepository merchItemRepository)
+        public MerchPackRequestCommandHandler(IMerchPackRepository merchPackRepository, IMediator mediator, IMerchItemRepository merchItemRepository)
         {
             _merchPackRepository = merchPackRepository;
-            _workerRepository = workerRepository;
             _mediator = mediator;
             _merchItemRepository = merchItemRepository;
         }
 
         public async Task<MerchPack> Handle(MerchPackRequestCommand request, CancellationToken cancellationToken)
         {
-            var workerInBd = await _workerRepository.FindByEmailAsync(request.Worker, cancellationToken);
-            if (workerInBd is null)
-            {
-               //TODO тут можно добавлять рабочего если его еще нет, но не знаю
-               // является ли это ответственностью моего сервиса
-               // но обработчик для этого навсякий написал
-               
-                throw new Exception($"Worker with email: {request.Worker} does not exist");
-            }
-
             await _merchItemRepository.CreateMerchItemsAsync(request.MerchItems, cancellationToken);
             await _merchItemRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
@@ -56,7 +42,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
                         .FirstOrDefault(type => type.Id == request.MerchType)?.Name),
                 request.MerchItems
                     .Select(l => new MerchItem(new Sku(l))) as List<MerchItem>,
-                workerInBd
+                new Worker(new Email(request.Worker))
             );
 
             var createResult = await _merchPackRepository.CreateMerchPackAsync(newMerchPack, cancellationToken);

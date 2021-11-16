@@ -1,4 +1,4 @@
-﻿namespace OzonEdu.MerchandiseApi.Models
+﻿namespace OzonEdu.MerchandiseApi.Models.Enum
 {
     public enum MerchType
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.Exceptions
+namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Exceptions
 {
     public class EmailNotValidException : Exception
     {

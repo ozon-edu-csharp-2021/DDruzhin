@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.Events;
 using OzonEdu.MerchandiseApi.Domain.Models;
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.Entities;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 
 namespace OzonEdu.MerchandiseApi.Infrastructure.Commands.WorkerRequest
 {

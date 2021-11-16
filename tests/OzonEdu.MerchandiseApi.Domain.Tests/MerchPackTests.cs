@@ -5,9 +5,6 @@ using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Excepti
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.Entities;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.Exceptions;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.ValueObjects;
 using Xunit;
 
 namespace OzonEdu.MerchandiseApi.Domain.Tests
@@ -27,10 +24,7 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
                     new(new Sku(4564816)),
                     new(new Sku(54564564))
                 },
-                new Worker(
-                    new Email("fsdf@asdas.sd"),
-                    new WorkerName("Иван", "Петров"))
-
+                new Worker(new Email("fsdf@asdas.sd"))
             );
 
             //Act
@@ -38,33 +32,7 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
             //Assert
             Assert.NotNull(merchPack);
         }
-
-        [Fact]
-        public void CreateMerchPackWithWorkerNameNotValidFail()
-        {
-            //Arrange
-            CreateMerchPack createMerchPack = () =>
-            {
-                var merchPack = new MerchPack(
-                    MerchType.VeteranPack,
-                    new List<MerchItem>
-                    {
-                        new(new Sku(4564816)),
-                        new(new Sku(54564564))
-                    },
-                    new Worker(
-                        new Email("fsdf@asdas.sd"),
-                        new WorkerName("И", "Петров"))
-
-                );
-            };
-
-            //Act
-
-            //Assert
-            Assert.Throws<NameNotValidException>(() => createMerchPack.Invoke());
-        }
-
+        
         [Fact]
         public void CreateMerchPackWithSkuNotValidFail()
         {
@@ -78,9 +46,7 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
                         new(new Sku(0)),
                         new(new Sku(54564564))
                     },
-                    new Worker(
-                        new Email("fsdf@asdas.sd"),
-                        new WorkerName("Иван", "Петров"))
+                    new Worker(new Email("fsdf@asdas.sd"))
                 );
             };
 
@@ -103,9 +69,7 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
                         new(new Sku(4564816)),
                         new(new Sku(54564564))
                     },
-                    new Worker(
-                        new Email("fsdfasdas.sd"),
-                        new WorkerName("Иван", "Петров"))
+                    new Worker(new Email("fsdfasdas.sd"))
 
                 );
             };

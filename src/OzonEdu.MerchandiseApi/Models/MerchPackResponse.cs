@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OzonEdu.MerchandiseApi.Models.Enum;
 
 namespace OzonEdu.MerchandiseApi.Models
 {

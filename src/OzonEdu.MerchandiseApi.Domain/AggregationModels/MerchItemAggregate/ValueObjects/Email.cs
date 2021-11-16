@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.MerchandiseApi.Domain.Models;
 
-namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.WorkerAggregate.ValueObjects
+namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects
 {
     public class Email : ValueObject
     {
