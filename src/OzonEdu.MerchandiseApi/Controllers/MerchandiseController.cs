@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
+using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
+using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPacksInfoRequest;
 using OzonEdu.MerchandiseApi.Models;
-using OzonEdu.MerchandiseApi.Services.Interfaces;
 
 namespace OzonEdu.MerchandiseApi.Controllers
 {
@@ -11,42 +15,52 @@ namespace OzonEdu.MerchandiseApi.Controllers
     [Route("v1/api/merchandise")]
     public class MerchandiseController : ControllerBase
     {
-        private readonly IMerchandiseService _merchandiseService;
+        private readonly IMediator _mediator;
 
-        public MerchandiseController(IMerchandiseService merchandiseService)
+        public MerchandiseController(IMediator mediator)
         {
-            _merchandiseService = merchandiseService;
+            _mediator = mediator;
         }
         
         [HttpPost]
-        public async Task<ActionResult<MerchItem>> RequestMerch(long workerId, MerchType merchType,
+        public async Task<ActionResult<MerchPackResponse>> RequestMerchPack(string workerEmail, int merchType, IEnumerable<long> items,
             CancellationToken token)
         {
-            var merchItem = await _merchandiseService.RequestMerch(workerId, merchType, token);
-            if (merchItem is null)
+            var merchPackRequestCommand = new MerchPackRequestCommand
+            {
+                Worker = workerEmail,
+                MerchItems = items,
+                MerchType = merchType
+            };
+            var merchPack = await _mediator.Send(merchPackRequestCommand,token);
+            if (merchPack is null)
             {
                 return NotFound();
             }
 
-            return Ok(merchItem);
+            return Ok(merchPack);
         }
 
 
-        [HttpGet("{workerId:long}")]
-        public async Task<ActionResult<List<MerchItem>>> RequestMerchInfo(long workerId, CancellationToken token)
+        [HttpGet("{workerEmail}")]
+        public async Task<ActionResult<List<MerchPackResponse>>> RequestMerchPacksInfo(string workerEmail, CancellationToken token)
         {
-            var merchItems = await _merchandiseService.RequestMerchInfo(workerId, token);
+            var merchPacksInfoRequestCommand = new MerchPacksInfoRequestCommand
+            {
+                Worker = workerEmail
+            };
+            var merchPacks = await _mediator.Send(merchPacksInfoRequestCommand, token);
 
-            if (merchItems is null)
+            if (merchPacks is null)
             {
                 return NotFound();
             }
-            if (merchItems.Count == 0)
+            if (!merchPacks.Any())
             {
                 return NoContent();
             }
 
-            return Ok(merchItems);
+            return Ok(merchPacks);
         }
     }
 }

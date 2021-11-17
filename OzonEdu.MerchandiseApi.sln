@@ -9,6 +9,7 @@ ProjectSection(SolutionItems) = preProject
 	TOKEN.txt = TOKEN.txt
 	Dockerfile = Dockerfile
 	docker-compose.yml = docker-compose.yml
+	MerchandiseAPI.drawio = MerchandiseAPI.drawio
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{108C2DB3-6004-4884-887A-D18059FF0FBE}"
@@ -19,6 +20,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Http
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Grpc", "src\OzonEdu.MerchandiseApi.Grpc\OzonEdu.MerchandiseApi.Grpc.csproj", "{CDDEA9CB-25C9-4F9F-A8C0-DC20B5A09E33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Domain", "src\OzonEdu.MerchandiseApi.Domain\OzonEdu.MerchandiseApi.Domain.csproj", "{FABF23C2-8A0F-4ABA-BA03-C10B343F403E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Infrastructure", "src\OzonEdu.MerchandiseApi.Infrastructure\OzonEdu.MerchandiseApi.Infrastructure.csproj", "{F968AAC6-DFF2-4029-BD8C-314C05EA6A52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Domain.Tests", "tests\OzonEdu.MerchandiseApi.Domain.Tests\OzonEdu.MerchandiseApi.Domain.Tests.csproj", "{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +35,9 @@ Global
 		{832EB693-581C-497B-ADD2-FED986E43EBE} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
 		{4C42E2DD-8ACE-4C2B-9E2E-61217E5A87C6} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
 		{CDDEA9CB-25C9-4F9F-A8C0-DC20B5A09E33} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
+		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
+		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
+		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E} = {108C2DB3-6004-4884-887A-D18059FF0FBE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{832EB693-581C-497B-ADD2-FED986E43EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -42,5 +52,17 @@ Global
 		{CDDEA9CB-25C9-4F9F-A8C0-DC20B5A09E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDDEA9CB-25C9-4F9F-A8C0-DC20B5A09E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDDEA9CB-25C9-4F9F-A8C0-DC20B5A09E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

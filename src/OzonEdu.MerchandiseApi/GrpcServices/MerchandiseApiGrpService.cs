@@ -1,54 +1,71 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using MediatR;
 using OzonEdu.MerchandiseApi.Grpc;
-using OzonEdu.MerchandiseApi.Services.Interfaces;
-using MerchType = OzonEdu.MerchandiseApi.Grpc.MerchType;
+using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
+using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPacksInfoRequest;
+using Status = OzonEdu.MerchandiseApi.Grpc.Status;
 
 namespace OzonEdu.MerchandiseApi.GrpcServices
 {
     public class MerchandiseApiGrpService : MerchandiseApiGrpc.MerchandiseApiGrpcBase
     {
-        private readonly IMerchandiseService _merchandiseService;
+        private readonly IMediator _mediator;
 
-        public MerchandiseApiGrpService(IMerchandiseService merchandiseService)
+        public MerchandiseApiGrpService(IMediator mediator)
         {
-            _merchandiseService = merchandiseService;
+            _mediator = mediator;
         }
 
-        public override async Task<RequestMerchResponse> RequestMerch(
-            RequestMerchRequest request,
+        public override async Task<RequestMerchPackResponse> RequestMerchPack(
+            RequestMerchPackRequest request,
             ServerCallContext context)
         {
-            var merchItem = await _merchandiseService.RequestMerch(request.WorkerId,
-                (Models.MerchType) request.MerchType, context.CancellationToken);
-            return new RequestMerchResponse
+            var merchPackRequestCommand = new MerchPackRequestCommand
             {
-                MerchUnit = new MerchUnit
+                Worker = request.WorkerEmail,
+                MerchItems = request.Items,
+                MerchType = (int) request.MerchType
+            };
+            var merchPack = await _mediator.Send(merchPackRequestCommand, context.CancellationToken);
+            return new RequestMerchPackResponse
+            {
+                MerchUnit =
                 {
-                    Issued = merchItem.Issued,
-                    MerchType = (MerchType) merchItem.MerchType,
-                    WorkerId = merchItem.WorkerId,
-                    MerchItemId = merchItem.MerchItemId
+                    WorkerEmail = merchPack.Worker.Email.Value,
+                    MerchPackId = merchPack.Id,
+                    Status = (Status) merchPack.Status.Id,
+                    DeliveryDate = merchPack.DeliveryDate.ToBinary(),
+                    RequestDate = merchPack.RequestDate.ToBinary(),
+                    MerchType = (MerchType) merchPack.Type.Id,
+                    MerchItems = {merchPack.MerchItems.Select(item => item.Sku.Value).ToArray()}
                 }
             };
         }
 
-        public override async Task<RequestMerchInfoResponse> RequestMerchInfo(
-            RequestMerchInfoRequest request,
+        public override async Task<RequestMerchPacksInfoResponse> RequestMerchPacksInfo(
+            RequestMerchPacksInfoRequest request,
             ServerCallContext context)
         {
-            var merchItem = await _merchandiseService.RequestMerchInfo(request.WorkerId, context.CancellationToken);
-            return new RequestMerchInfoResponse
+            var merchPacksInfoRequestCommand = new MerchPacksInfoRequestCommand
+            {
+                Worker = request.WorkerEmail
+            };
+            var merchPacks = await _mediator.Send(merchPacksInfoRequestCommand, context.CancellationToken);
+            return new RequestMerchPacksInfoResponse
             {
                 Merch =
                 {
-                    merchItem.Select(x => new MerchUnit
+                    merchPacks.Select(pack => new MerchPackUnit
                     {
-                        Issued = x.Issued,
-                        MerchType = (MerchType) x.MerchType,
-                        WorkerId = x.WorkerId,
-                        MerchItemId = x.MerchItemId
+                        WorkerEmail = pack.Worker.Email.Value,
+                        MerchPackId = pack.Id,
+                        Status = (Status) pack.Status.Id,
+                        DeliveryDate = pack.DeliveryDate.ToBinary(),
+                        RequestDate = pack.RequestDate.ToBinary(),
+                        MerchType = (MerchType) pack.Type.Id,
+                        MerchItems = {pack.MerchItems.Select(item => item.Sku.Value).ToArray()}
                     })
                 }
             };

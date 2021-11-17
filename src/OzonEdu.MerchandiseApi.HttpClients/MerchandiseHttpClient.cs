@@ -9,8 +9,8 @@ namespace OzonEdu.MerchandiseApi.HttpClients
 {
     public interface IMerchandiseHttpClient
     {
-        Task<MerchItemResponse> RequestMerch(long workerId, int merchType, CancellationToken token);
-        Task<List<MerchItemResponse>> RequestMerchInfo(long workerId, CancellationToken token);
+        Task<MerchPackResponse> RequestMerch(long workerId, int merchType, CancellationToken token);
+        Task<IEnumerable<MerchPackResponse>> RequestMerchInfo(long workerId, CancellationToken token);
     }
 
     public class MerchandiseHttpClient : IMerchandiseHttpClient
@@ -22,7 +22,7 @@ namespace OzonEdu.MerchandiseApi.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task<MerchItemResponse> RequestMerch(long workerId, int merchType, CancellationToken token)
+        public async Task<MerchPackResponse> RequestMerch(long workerId, int merchType, CancellationToken token)
         {
             var content = new FormUrlEncodedContent(new[]
             {
@@ -31,14 +31,14 @@ namespace OzonEdu.MerchandiseApi.HttpClients
             });
             using var response = await _httpClient.PostAsync("v1/api/merchandise", content, token);
             var body = await response.Content.ReadAsStringAsync(token);
-            return JsonSerializer.Deserialize<MerchItemResponse>(body);
+            return JsonSerializer.Deserialize<MerchPackResponse>(body);
         }
 
-        public async Task<List<MerchItemResponse>> RequestMerchInfo(long workerId, CancellationToken token)
+        public async Task<IEnumerable<MerchPackResponse>> RequestMerchInfo(long workerId, CancellationToken token)
         {
             using var response = await _httpClient.GetAsync($"v1/api/merchandise{workerId}", token);
             var body = await response.Content.ReadAsStringAsync(token);
-            return JsonSerializer.Deserialize<List<MerchItemResponse>>(body);
+            return JsonSerializer.Deserialize<IEnumerable<MerchPackResponse>>(body);
         }
     }
 }
