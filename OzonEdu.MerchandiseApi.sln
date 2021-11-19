@@ -10,6 +10,7 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 	docker-compose.yml = docker-compose.yml
 	MerchandiseAPI.drawio = MerchandiseAPI.drawio
+	entrypoint.sh = entrypoint.sh
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{108C2DB3-6004-4884-887A-D18059FF0FBE}"
@@ -26,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Domain.Tests", "tests\OzonEdu.MerchandiseApi.Domain.Tests\OzonEdu.MerchandiseApi.Domain.Tests.csproj", "{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.Migrator", "src\OzonEdu.MerchandiseApi.Migrator\OzonEdu.MerchandiseApi.Migrator.csproj", "{920FF1C9-0726-470F-B052-A7F28AB1719F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +41,7 @@ Global
 		{FABF23C2-8A0F-4ABA-BA03-C10B343F403E} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
 		{F968AAC6-DFF2-4029-BD8C-314C05EA6A52} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
 		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E} = {108C2DB3-6004-4884-887A-D18059FF0FBE}
+		{920FF1C9-0726-470F-B052-A7F28AB1719F} = {9EE1EBEC-74EB-48DF-8C8E-3EB42E51EE25}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{832EB693-581C-497B-ADD2-FED986E43EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -64,5 +68,9 @@ Global
 		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3068E0E-3E6A-4012-AE7B-0EA75FDDF78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{920FF1C9-0726-470F-B052-A7F28AB1719F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920FF1C9-0726-470F-B052-A7F28AB1719F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920FF1C9-0726-470F-B052-A7F28AB1719F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920FF1C9-0726-470F-B052-A7F28AB1719F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

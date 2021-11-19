@@ -12,18 +12,21 @@ namespace OzonEdu.MerchandiseApi
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureKestrel(options =>
                     {
-                        options.ConfigureEndpointDefaults(lo => 
+                        options.ConfigureEndpointDefaults(lo =>
                             lo.Protocols = HttpProtocols.Http2);
                     });
                     webBuilder.UseStartup<Startup>();
                 })
                 .AddInfrastructure()
                 .AddHttp();
+        }
     }
 }

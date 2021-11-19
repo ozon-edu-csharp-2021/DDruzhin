@@ -12,27 +12,28 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
     public class MerchPackTests
     {
         private delegate void CreateMerchPack();
-        
+
         [Fact]
         public void CreateMerchPackSuccess()
         {
             //Arrange
             var merchPack = new MerchPack(
-                MerchType.WelcomePack,
-                new List<MerchItem>
-                {
+                MerchType.WelcomePack, 
+                new List<MerchItem>{
                     new(new Sku(4564816)),
                     new(new Sku(54564564))
                 },
-                new Worker(new Email("fsdf@asdas.sd"))
-            );
+                new Worker(new Email("123@sad.sd")), 
+                DateTime.Now, 
+                DateTime.MinValue,
+                Status.WaitItems);
 
             //Act
 
             //Assert
             Assert.NotNull(merchPack);
         }
-        
+
         [Fact]
         public void CreateMerchPackWithSkuNotValidFail()
         {
@@ -40,14 +41,15 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
             CreateMerchPack createMerchPack = () =>
             {
                 var merchPack = new MerchPack(
-                    MerchType.ConferenceListenerPack,
-                    new List<MerchItem>
-                    {
+                    MerchType.WelcomePack, 
+                    new List<MerchItem>{
                         new(new Sku(0)),
                         new(new Sku(54564564))
                     },
-                    new Worker(new Email("fsdf@asdas.sd"))
-                );
+                    new Worker(new Email("123@sad.sd")), 
+                    DateTime.Now, 
+                    DateTime.MinValue,
+                    Status.WaitItems);
             };
 
             //Act
@@ -63,15 +65,15 @@ namespace OzonEdu.MerchandiseApi.Domain.Tests
             CreateMerchPack createMerchPack = () =>
             {
                 var merchPack = new MerchPack(
-                    MerchType.ProbationPeriodEndingPack,
-                    new List<MerchItem>
-                    {
+                    MerchType.WelcomePack, 
+                    new List<MerchItem>{
                         new(new Sku(4564816)),
                         new(new Sku(54564564))
                     },
-                    new Worker(new Email("fsdfasdas.sd"))
-
-                );
+                    new Worker(new Email("123sad.sd")), 
+                    DateTime.Now, 
+                    DateTime.MinValue,
+                    Status.WaitItems);
             };
 
             //Act

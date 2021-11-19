@@ -11,20 +11,44 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
 {
     public class MerchPack : Entity
     {
-        public MerchPack(MerchType type, List<MerchItem> merchItems, Worker worker)
+        public MerchPack(
+            MerchType type, 
+            IEnumerable<MerchItem> merchItems, 
+            Worker worker, 
+            DateTime requestDate, 
+            DateTime deliveryDate, 
+            Status status)
         {
             Type = type;
             MerchItems = merchItems;
             Worker = worker;
-            RequestMerchItems();
+            SetRequestDate(requestDate);
+            SetDeliveryDate(deliveryDate);
+            SetStatus(status);
+        }
+
+        private void SetDeliveryDate(DateTime deliveryDate)
+        {
+            DeliveryDate = deliveryDate;
+        }
+
+        private void SetStatus(Status status)
+        {
+            Status = status;
+        }
+
+        private void SetRequestDate(DateTime requestDate)
+        {
+            //TODO добавить проверки на дату
+            RequestDate = requestDate;
         }
 
         // работник на которого выдается пак
         // что тут вообще забыл работник объясняется ниже
-        public Worker Worker { get; }
+        public Worker Worker { get; init; }
 
         // техущий статус выдачи
-        public Status Status { get; } = Status.WaitItems;
+        public Status Status { get; private set;}
 
         // тип пака
         public MerchType Type { get; }
@@ -43,12 +67,11 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
         // дата создания заявки на выдачу, если ведении очередности по
         // id в бд не подходит, то можно использовать это поле для
         // определения очередности
-        public DateTime RequestDate { get; } = DateTime.Now;
+        public DateTime RequestDate { get; private set;} 
 
         // дата готовности к выдаче пака, можно потом использовать для
         // анализа причин задержек тех или иных итемов
         public DateTime DeliveryDate { get; private set; }
-
         
         //TODO не уверен что этот метод должен быть тут
         public void RequestMerchItems()

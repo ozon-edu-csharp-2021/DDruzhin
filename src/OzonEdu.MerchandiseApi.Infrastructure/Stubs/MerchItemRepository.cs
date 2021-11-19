@@ -1,41 +1,61 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
+using Npgsql;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate;
-using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities;
-using OzonEdu.MerchandiseApi.Domain.Contracts;
-
+using OzonEdu.MerchandiseApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
 {
     public class MerchItemRepository : IMerchItemRepository
     {
-        public IUnitOfWork UnitOfWork { get; }
-        public Task<MerchItem> CreateAsync(MerchItem itemToCreate, CancellationToken cancellationToken = default)
+        private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
+        private readonly IChangeTracker _changeTracker;
+        private const int Timeout = 5;
+
+        public MerchItemRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        {
+            _dbConnectionFactory = dbConnectionFactory;
+            _changeTracker = changeTracker;
+        }
+        
+        public async Task<MerchItem> UpdateAsync(MerchItem itemToUpdate, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<MerchItem> UpdateAsync(MerchItem itemToUpdate, CancellationToken cancellationToken = default)
+        public async Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken = default)
+        public async Task<MerchItem> CreateMerchItemAsync(MerchItem merchItem, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
-        }
+            const string sql = @"
+                INSERT INTO merch_items (id, sku, availability)
+                VALUES (@Id, @Sku, @Availability);";
 
-        public Task<IEnumerable<long>> CreateMerchItemsAsync(IEnumerable<long> merchItems, CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
+            var parameters = new
+            {
+                Id = merchItem.Id,
+                Sku = merchItem.Sku.Value,
+                Availability = merchItem.Availability
+            };
+            var commandDefinition = new CommandDefinition(
+                sql,
+                parameters: parameters,
+                commandTimeout: Timeout,
+                cancellationToken: cancellationToken);
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            await connection.ExecuteAsync(commandDefinition);
+            _changeTracker.Track(merchItem);
+            return merchItem;
         }
     }
 

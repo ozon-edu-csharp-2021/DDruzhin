@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\OzonEdu.MerchandiseApi.Grpc\OzonEdu.MerchandiseApi.Grpc.csproj" />
       <ProjectReference Include="..\OzonEdu.MerchandiseApi.Infrastructure\OzonEdu.MerchandiseApi.Infrastructure.csproj" />
+      <ProjectReference Include="..\OzonEdu.MerchandiseApi.Migrator\OzonEdu.MerchandiseApi.Migrator.csproj" />
     </ItemGroup>
 
 </Project>
