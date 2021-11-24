@@ -54,7 +54,41 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            // проверяем можем ли мы сразу выдать пак
+            // не ожидаем выполнения, так как нам это и не нужно
+            RequestMerchItems(createResult, cancellationToken);
+            
             return createResult;
+        }
+        
+        private async Task RequestMerchItems(MerchPack merchPack, CancellationToken cancellationToken)
+        {
+            await _unitOfWork.StartTransaction(cancellationToken);
+
+            foreach (var item in merchPack.MerchItems)
+            {
+                // проверка нужна при новой поставке
+                if (item.Availability) continue;
+                
+                //TODO тут запрос к stock-api по sku на доступность итема
+                // если доступен, то резервируем
+
+                // и изменяем статус итема
+                item.ChangeAvailability();
+                await _merchItemRepository.UpdateAsync(item, cancellationToken);
+            }
+            
+            // если все итемы для выдачи есть и зарезервированы
+            if (merchPack.MerchItems.Count(item => item.Availability is true) == merchPack.MerchItems.Count())
+            {
+                merchPack.SetDeliveryDate(DateTime.Now);
+
+                await _merchPackRepository.UpdateAsync(merchPack, cancellationToken);
+                
+                // шлем в кафку сообщение что можно забирать пак
+            }
+            
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

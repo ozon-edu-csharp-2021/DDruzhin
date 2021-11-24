@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Enumerations;
-using OzonEdu.MerchandiseApi.Domain.Events;
 using OzonEdu.MerchandiseApi.Domain.Models;
 
 namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Entities
@@ -27,8 +25,14 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
             SetStatus(status);
         }
 
-        private void SetDeliveryDate(DateTime deliveryDate)
+        public void SetId(int id)
         {
+            base.Id = id;
+        }
+        
+        public void SetDeliveryDate(DateTime deliveryDate)
+        {
+            //TODO добавить проверки на дату
             DeliveryDate = deliveryDate;
         }
 
@@ -45,7 +49,7 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
 
         // работник на которого выдается пак
         // что тут вообще забыл работник объясняется ниже
-        public Worker Worker { get; init; }
+        public Worker Worker { get; }
 
         // техущий статус выдачи
         public Status Status { get; private set;}
@@ -67,37 +71,10 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate.Ent
         // дата создания заявки на выдачу, если ведении очередности по
         // id в бд не подходит, то можно использовать это поле для
         // определения очередности
-        public DateTime RequestDate { get; private set;} 
+        public DateTime RequestDate { get; private set; }
 
         // дата готовности к выдаче пака, можно потом использовать для
         // анализа причин задержек тех или иных итемов
         public DateTime DeliveryDate { get; private set; }
-        
-        //TODO не уверен что этот метод должен быть тут
-        public void RequestMerchItems()
-        {
-            foreach (var item in MerchItems)
-            {
-                if (item.Availability is false)
-                {
-                    //TODO тут запрос к stock-api по sku на доступность итема
-                    // если доступен, то резервируем
-
-                    // и изменяем статус итема
-                    item.ChangeAvailability();
-                }
-            }
-            // если все итемы для выдачи есть и зарезервированы
-            if (MerchItems.Count(item => item.Availability is true) == MerchItems.Count())
-            {
-                DeliveryDate = DateTime.Now;
-                AddMerchPackReadyDeliveryDomainEvent();
-            }
-        }
-
-        private void AddMerchPackReadyDeliveryDomainEvent()
-        {
-            this.AddDomainEvent(new MerchPackReadyDeliveryDomainEvent(this));
-        }
     }
 }

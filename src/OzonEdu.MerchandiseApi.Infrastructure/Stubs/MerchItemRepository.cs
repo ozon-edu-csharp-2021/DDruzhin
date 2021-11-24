@@ -20,17 +20,33 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
             _changeTracker = changeTracker;
         }
         
-        public async Task<MerchItem> UpdateAsync(MerchItem itemToUpdate, CancellationToken cancellationToken = default)
+        public async Task<MerchItem> UpdateAsync(MerchItem itemToUpdate, CancellationToken cancellationToken)
+        {
+            const string sql = @"UPDATE merch_items SET availability = @Availability;";
+
+            var parameters = new
+            {
+                Availability = itemToUpdate.Availability
+            };
+            var commandDefinition = new CommandDefinition(
+                sql,
+                parameters: parameters,
+                commandTimeout: Timeout,
+                cancellationToken: cancellationToken);
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            
+            await connection.ExecuteAsync(commandDefinition);
+            
+            _changeTracker.Track(itemToUpdate);
+            return itemToUpdate;
+        }
+
+        public async Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken = default)
+        public async Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
@@ -53,7 +69,13 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            await connection.ExecuteAsync(commandDefinition);
+            
+            var insertId = await connection.ExecuteScalarAsync(commandDefinition);
+            
+            // по идее так как у нас запрос на добавление и возврат один,
+            // то при неудачной вставке нужный экзепшн остановит все раньше
+            merchItem.SetId(int.Parse(insertId.ToString()));
+            
             _changeTracker.Track(merchItem);
             return merchItem;
         }
