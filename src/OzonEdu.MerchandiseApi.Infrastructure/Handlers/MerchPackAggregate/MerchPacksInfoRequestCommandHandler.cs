@@ -22,8 +22,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Handlers.MerchPackAggregate
         public async Task<IEnumerable<MerchPack>> Handle(MerchPacksInfoRequestCommand request,
             CancellationToken cancellationToken)
         {
-            var merchPacks = await _merchPackRepository.FindByWorkerEmailAsync(request.Worker, cancellationToken);
-            return merchPacks ;
+            return await _merchPackRepository.FindByWorkerEmailAsync(request.Worker, cancellationToken);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Extensions
         {
             services.AddScoped<IMerchPackRepository, MerchPackRepository>();
             services.AddScoped<IMerchItemRepository, MerchItemRepository>();
-
+            
             return services;
         }
     }

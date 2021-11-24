@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OzonEdu.MerchandiseApi.Models.Enum;
 
 namespace OzonEdu.MerchandiseApi.Models
 {
     public class MerchPackResponse
     {
-        public long MerchPackId { get; set; }
+        public int Status { get; set; }
         public MerchType MerchType { get; set; }
-        public string WorkerEmail { get; set; }
-        public IEnumerable<long> Items { get; set; }
+        public DateTime RequestDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
     }
 }

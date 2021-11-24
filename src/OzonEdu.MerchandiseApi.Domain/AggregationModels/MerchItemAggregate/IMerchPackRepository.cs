@@ -9,8 +9,9 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate
 {
     public interface IMerchItemRepository : IRepository<MerchItem>
     {
-        Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken = default);
-        Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken = default);
-        Task<IEnumerable<long>> CreateMerchItemsAsync(IEnumerable<long> merchItems, CancellationToken cancellationToken = default);
+        Task<MerchItem> UpdateAsync(MerchItem itemToUpdate, CancellationToken cancellationToken);
+        Task<MerchItem> FindByIdAsync(long id, CancellationToken cancellationToken);
+        Task<MerchItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken);
+        Task<MerchItem> CreateMerchItemAsync(MerchItem merchItem, CancellationToken cancellationToken);
     }
 }

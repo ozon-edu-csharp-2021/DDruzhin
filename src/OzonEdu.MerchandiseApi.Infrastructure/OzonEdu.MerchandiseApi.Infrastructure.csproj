@@ -8,7 +8,10 @@
       <ProjectReference Include="..\OzonEdu.MerchandiseApi.Domain\OzonEdu.MerchandiseApi.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.0.123" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+        <PackageReference Include="Npgsql" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

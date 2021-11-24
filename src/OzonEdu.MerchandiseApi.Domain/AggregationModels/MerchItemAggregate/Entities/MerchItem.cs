@@ -16,7 +16,12 @@ namespace OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Ent
         {
             SetSku(sku);
         }
-
+        
+        public void SetId(int id)
+        {
+            base.Id = id;
+        }
+        
         // при создании заявки доступность всех элементов
         // false по умолчанию, а потом при опросе
         // stock-api изменяется для итемов в наличии 
