@@ -1,20 +1,26 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using OpenTracing;
 using OzonEdu.MerchandiseApi.Grpc;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPackRequest;
 using OzonEdu.MerchandiseApi.Infrastructure.Commands.MerchPacksInfoRequest;
+using ILogger = Serilog.ILogger;
 using Status = OzonEdu.MerchandiseApi.Grpc.Status;
 
 namespace OzonEdu.MerchandiseApi.GrpcServices
 {
     public class MerchandiseApiGrpService : MerchandiseApiGrpc.MerchandiseApiGrpcBase
     {
+        private readonly ITracer _tracer;
         private readonly IMediator _mediator;
 
-        public MerchandiseApiGrpService(IMediator mediator)
+        public MerchandiseApiGrpService(ITracer tracer,IMediator mediator)
         {
+            _tracer = tracer;
             _mediator = mediator;
         }
 
@@ -22,6 +28,9 @@ namespace OzonEdu.MerchandiseApi.GrpcServices
             RequestMerchPackRequest request,
             ServerCallContext context)
         {
+            using var span = _tracer
+                .BuildSpan("MerchandiseApiGrpService.RequestMerchPack")
+                .StartActive();
             var merchPackRequestCommand = new MerchPackRequestCommand
             {
                 Worker = request.WorkerEmail,
@@ -48,6 +57,9 @@ namespace OzonEdu.MerchandiseApi.GrpcServices
             RequestMerchPacksInfoRequest request,
             ServerCallContext context)
         {
+            using var span = _tracer
+                .BuildSpan("MerchandiseApiGrpService.RequestMerchPacksInfo")
+                .StartActive();
             var merchPacksInfoRequestCommand = new MerchPacksInfoRequestCommand
             {
                 Worker = request.WorkerEmail

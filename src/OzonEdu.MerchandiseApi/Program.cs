@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
 using OzonEdu.MerchandiseApi.Infrastructure.Extensions;
+using Serilog;
 
 namespace OzonEdu.MerchandiseApi
 {
@@ -14,8 +15,11 @@ namespace OzonEdu.MerchandiseApi
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-
             return Host.CreateDefaultBuilder(args)
+                .UseSerilog(
+                    (context, configuration) => configuration
+                        .ReadFrom.Configuration(context.Configuration)
+                        .WriteTo.Console())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureKestrel(options =>

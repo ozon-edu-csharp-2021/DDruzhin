@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.Entities;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchItemAggregate.ValueObjects;
 using OzonEdu.MerchandiseApi.Domain.AggregationModels.MerchPackAggregate;
@@ -18,17 +19,24 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
 {
     public class MerchPackRepository : IMerchPackRepository
     {
+        private readonly ITracer _tracer;
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
-        public MerchPackRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+
+        public MerchPackRepository(ITracer tracer, IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
+            IChangeTracker changeTracker)
         {
+            _tracer = tracer;
             _dbConnectionFactory = dbConnectionFactory;
             _changeTracker = changeTracker;
         }
-        
+
         public async Task<MerchPack> UpdateAsync(MerchPack itemToUpdate, CancellationToken cancellationToken)
         {
+            using var span = _tracer
+                .BuildSpan("MerchPackRepository.UpdateAsync")
+                .StartActive();
             const string sql = @"UPDATE merch_packs 
                                     SET worker = @Worker,
                                         status = @Status,
@@ -36,13 +44,13 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                                         merch_items = @MerchItems,
                                         request_date = @RequestDate,
                                         delivery_date = @DeliveryDate;";
-            
+
             var parameters = new
             {
                 Worker = itemToUpdate.Worker,
                 Status = itemToUpdate.Status,
                 MerchType = itemToUpdate.Type,
-                MerchItems = itemToUpdate.MerchItems,
+                MerchItems = itemToUpdate.MerchItems.Select(item => item.Id).ToArray(),
                 RequestDate = itemToUpdate.RequestDate,
                 DeliveryDate = itemToUpdate.DeliveryDate
             };
@@ -51,11 +59,11 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 parameters: parameters,
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
-            
+
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             await connection.ExecuteAsync(commandDefinition);
             _changeTracker.Track(itemToUpdate);
-            
+
             return itemToUpdate;
         }
 
@@ -64,8 +72,12 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<MerchPack>> FindByWorkerEmailAsync(string email, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MerchPack>> FindByWorkerEmailAsync(string email,
+            CancellationToken cancellationToken)
         {
+            using var span = _tracer
+                .BuildSpan("MerchPackRepository.FindByWorkerEmailAsync")
+                .StartActive();
             const string sql = @"
                 SELECT worker, status, merch_type, merch_items, request_date, delivery_date FROM merch_packs WHERE worker = @Email";
             var parameters = new
@@ -77,7 +89,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 parameters: parameters,
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
-            
+
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
 
             var merchPacks = await connection.QueryAsync<MerchPackDto>(commandDefinition);
@@ -89,12 +101,16 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 new Worker(new Email(model.WorkerEmail)),
                 requestDate: model.RequestDate,
                 deliveryDate: model.DeliveryDate,
-                status:new Status(model.Status,Enumeration.GetAll<Status>().FirstOrDefault(status => status.Id == model.Status)?.Name)
+                status: new Status(model.Status,
+                    Enumeration.GetAll<Status>().FirstOrDefault(status => status.Id == model.Status)?.Name)
             ));
         }
 
         public async Task<MerchPack> CreateMerchPackAsync(MerchPack merchPack, CancellationToken cancellationToken)
         {
+            using var span = _tracer
+                .BuildSpan("MerchPackRepository.CreateMerchPackAsync")
+                .StartActive();
             const string sql = @"
                 INSERT INTO merch_packs (worker, status, merch_type, merch_items, request_date, delivery_date)
                 VALUES (@Worker, @Status, @MerchType, @MerchItems, @RequestDate, @DeliveryDate) RETURNING id;";
@@ -106,6 +122,7 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 MerchType = merchPack.Type.Id,
                 RequestDate = merchPack.RequestDate,
                 DeliveryDate = merchPack.DeliveryDate,
+                MerchItems = merchPack.MerchItems.Select(item => item.Id).ToArray()
             };
             var commandDefinition = new CommandDefinition(
                 sql,
@@ -113,15 +130,15 @@ namespace OzonEdu.MerchandiseApi.Infrastructure.Stubs
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            
+
             var insertId = await connection.ExecuteScalarAsync(commandDefinition);
 
             // по идее так как у нас запрос на добавление и возврат один,
             // то при неудачной вставке нужный экзепшн остановит все раньше
             merchPack.SetId(int.Parse(insertId.ToString()));
-            
+
             _changeTracker.Track(merchPack);
-            
+
             return merchPack;
         }
     }

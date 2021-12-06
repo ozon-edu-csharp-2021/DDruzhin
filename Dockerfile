@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 WORKDIR /src
 COPY ["src/OzonEdu.MerchandiseApi/OzonEdu.MerchandiseApi.csproj", "src/OzonEdu.MerchandiseApi/"]
@@ -14,7 +14,7 @@ FROM build AS publish
 RUN dotnet publish "OzonEdu.MerchandiseApi.csproj" -c Release -o /app/publish
 COPY "entrypoint.sh" "/app/publish/."
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 
 WORKDIR /app
 

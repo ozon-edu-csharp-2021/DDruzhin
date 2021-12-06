@@ -6,9 +6,8 @@ namespace OzonEdu.MerchandiseApi.Migrator.Migrations
     {
         public override void Up()
         {
-            
             Execute.Sql(@"
-                CREATE TABLE if NOT EXISTS merch_items(
+                CREATE TABLE if NOT EXISTS merch_items_table(
                     id BIGSERIAL PRIMARY KEY,
                     sku BIGINT NOT NULL,
                     availability BOOLEAN NOT NULL);"
@@ -17,7 +16,7 @@ namespace OzonEdu.MerchandiseApi.Migrator.Migrations
 
         public override void Down()
         {
-            Execute.Sql(@"DROP TABLE if EXISTS merch_items;");
+            Execute.Sql(@"DROP TABLE if EXISTS merch_items_table;");
         }
     }
 }
